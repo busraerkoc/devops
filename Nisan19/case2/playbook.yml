@@ -1,0 +1,84 @@
+---
+- hosts: app
+  become: yes
+  roles:
+    - geerlingguy.docker
+  tasks:
+    - name: Install python3
+      apt:
+        name: 
+        - python3
+        - python3-pip
+        state: present
+
+    - name: Install Docker Python Library
+      pip:
+        name:
+          - docker
+          - docker-compose
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+
+    - name: Copying artifacts
+      block:
+        - name: Copy artifacts app
+          copy:
+            src: ./ansible/app
+            dest: /tmp
+        - name: Copy artifacts nginx
+          copy:
+            src: ./ansible/nginx
+            dest: /tmp
+        - name: Copy artifacts db
+          copy:
+            src: ./ansible/db
+            dest: /tmp  
+
+    - name: Deploy application
+      docker_compose:
+        project_name: trendyol-app
+        definition:
+          version: '2'
+          services:
+            app:
+              build: /tmp/app
+              command: "gunicorn --bind 0.0.0.0:8000 app:app"
+              ports:
+                - "8000:8000"
+              depends_on:
+                - db
+            db:
+              image: mysql:5.7
+              environment:
+                MYSQL_ROOT_PASSWORD: root
+              ports:
+                - "3306:3306"
+              volumes:
+                - /tmp/db:/docker-entrypoint-initdb.d/:ro
+            nginx:
+              build: /tmp/nginx
+              ports:
+                - "80:80"
+              depends_on:
+                - app
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+
+    - name: Sleep for a while for database initialization
+      pause:
+        seconds: 10
+
+    - name: Remove artifacts
+      block:
+        - name: Remove app artifacts
+          file:
+            path: /tmp/app
+            state: absent
+        - name: Remove nginx artifacts
+          file:
+            path: /tmp/nginx
+            state: absent
+        - name: Remove db artifacts
+          file:
+            path: /tmp/db
+            state: present
