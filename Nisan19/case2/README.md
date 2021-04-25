@@ -46,6 +46,7 @@ $ ansible-galaxy install geerlingguy.docker
 ```* 
 $ ansible-playbook playbook.yml
 ```
+![app](docs/app.png)
 
 ![hosgeldin_devops](docs/hosgeldin_devops.png)
 
