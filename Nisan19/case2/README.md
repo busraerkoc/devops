@@ -1,5 +1,7 @@
 # Case 2
 
+I created an extra docker-compose file for this case and you can find it in this repo as docker-compose.yml.
+
 The case will implement the following configuration:
 
 
@@ -49,6 +51,7 @@ $ ansible-playbook playbook.yml
 ![app](docs/app.png)
 
 ![hosgeldin_devops](docs/hosgeldin_devops.png)
+
 
 ## References
 
