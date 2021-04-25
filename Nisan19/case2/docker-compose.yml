@@ -1,0 +1,23 @@
+version: '2'
+services:
+  app:
+    build: ./ansible/app
+    ports:
+      - "8000:8000"
+    command: gunicorn --bind 0.0.0.0:8000 app:app
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./ansible/db:/docker-entrypoint-initdb.d/:ro
+
+  nginx:
+    build: ./ansible/nginx
+    ports:
+     - "80:80"
+    depends_on:
+      - app
