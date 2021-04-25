@@ -19,7 +19,7 @@ The case will implement the following configuration:
 * Clone this repo
 
 ```
-$ git clone "my_repo_link"
+$ git clone https://github.com/busraerkoc/devops.git
 ```
 
 * Create Virtual Machines

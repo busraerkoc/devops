@@ -16,7 +16,7 @@ The case will implement the following configuration:
 * Clone this repo
 
 ```
-$ git clone "my_repo_link"
+$ git clone https://github.com/busraerkoc/devops.git
 ```
 
 1. Create Centos VM with vagrant and connect to machine with ssh. Check the updates. If kernel updates available, you must reboot the machine after update.
